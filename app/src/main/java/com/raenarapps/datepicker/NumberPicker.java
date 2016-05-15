@@ -1549,9 +1549,11 @@ public class NumberPicker extends LinearLayout {
             if (i == SELECTOR_MIDDLE_ITEM_INDEX){
                 mSelectorWheelPaint.setColor(getResources().getColor(R.color.pickerSelectedTextColor));
                 mSelectorWheelPaint.setTextSize(textSize + 10);
+                mSelectorWheelPaint.setFakeBoldText(true);
                 canvas.drawText(scrollSelectorValue, x, y, mSelectorWheelPaint);
                 mSelectorWheelPaint.setColor(getResources().getColor(R.color.pickerTextColor));
                 mSelectorWheelPaint.setTextSize(textSize);
+                mSelectorWheelPaint.setFakeBoldText(false);
             } else {
                 canvas.drawText(scrollSelectorValue, x, y, mSelectorWheelPaint);
             }

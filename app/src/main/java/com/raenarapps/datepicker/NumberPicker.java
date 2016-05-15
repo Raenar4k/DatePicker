@@ -35,6 +35,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.NumberKeyListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -127,7 +128,7 @@ public class NumberPicker extends LinearLayout {
     /**
      * The strength of fading in the top and bottom while drawing the selector.
      */
-    private static final float TOP_AND_BOTTOM_FADING_EDGE_STRENGTH = 0.9f;
+    private static final float TOP_AND_BOTTOM_FADING_EDGE_STRENGTH = 0f;
 
     /**
      * The default unscaled height of the selection divider.
@@ -137,7 +138,7 @@ public class NumberPicker extends LinearLayout {
     /**
      * The default unscaled distance between the selection dividers.
      */
-    private static final int UNSCALED_DEFAULT_SELECTION_DIVIDERS_DISTANCE = 48;
+    private static final int UNSCALED_DEFAULT_SELECTION_DIVIDERS_DISTANCE = 18;
 
     /**
      * The resource id for the default layout.
@@ -697,12 +698,15 @@ public class NumberPicker extends LinearLayout {
                 }
             }
         });
-        mInputText.setFilters(new InputFilter[] {
+        mInputText.setFilters(new InputFilter[]{
                 new InputTextFilter()
         });
 
         mInputText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
         mInputText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        //todo decide if we need EditText here
+        mInputText.setVisibility(GONE);
 
         // initialize constants
         ViewConfiguration configuration = ViewConfiguration.get(context);
@@ -1535,7 +1539,20 @@ public class NumberPicker extends LinearLayout {
             // item. Otherwise, if the user starts editing the text via the
             // IME he may see a dimmed version of the old value intermixed
             // with the new one.
-            if (i != SELECTOR_MIDDLE_ITEM_INDEX || mInputText.getVisibility() != VISIBLE) {
+//            if (i != SELECTOR_MIDDLE_ITEM_INDEX || mInputText.getVisibility() != VISIBLE) {
+//                mSelectorWheelPaint.setColor(getResources().getColor(R.color.pickerTextColor));
+//                canvas.drawText(scrollSelectorValue, x, y, mSelectorWheelPaint);
+//            }
+
+            // if (mCurrentScrollOffset == mInitialScrollOffset && i == SELECTOR_MIDDLE_ITEM_INDEX)
+            float textSize = mSelectorWheelPaint.getTextSize();
+            if (i == SELECTOR_MIDDLE_ITEM_INDEX){
+                mSelectorWheelPaint.setColor(getResources().getColor(R.color.pickerSelectedTextColor));
+                mSelectorWheelPaint.setTextSize(textSize + 10);
+                canvas.drawText(scrollSelectorValue, x, y, mSelectorWheelPaint);
+                mSelectorWheelPaint.setColor(getResources().getColor(R.color.pickerTextColor));
+                mSelectorWheelPaint.setTextSize(textSize);
+            } else {
                 canvas.drawText(scrollSelectorValue, x, y, mSelectorWheelPaint);
             }
             y += mSelectorElementHeight;
